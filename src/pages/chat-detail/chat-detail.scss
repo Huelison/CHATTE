@@ -1,0 +1,10 @@
+page-chat-detail {
+    .item-no-margin .label-md{
+        margin-bottom: 0px ;
+        margin-top: 0px ;
+        margin-right: 0px;
+    }
+    .item-no-margin+.item-block{
+        min-height: 0.4rem;
+    }
+}

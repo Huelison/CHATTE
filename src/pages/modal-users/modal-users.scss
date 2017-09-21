@@ -1,0 +1,9 @@
+page-modal-users {
+    .item-no-margin .label-md{
+        margin-bottom: 0px ;
+        margin-top: 0px ;
+    }
+    .item-no-margin+.item-block{
+        min-height: 0.2rem;
+    }
+}

@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Iniciar uma conversa
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list  no-lines>
+    <ion-item *ngFor="let item of Users|async" class="item-no-margin" >
+      <button ion-button full outline color="light" (click)="dismiss(item.$key, item.name)" no-padding no-margin>
+        <p color="black" text-left style="width: 95% !important;">{{item.name}}</p>
+      </button>
+    </ion-item>
+  </ion-list>
+</ion-content>
