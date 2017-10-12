@@ -1,4 +1,3 @@
-import { LoginProvider } from './../providers/login/login';
 import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -10,7 +9,6 @@ import { LoginPage } from './../pages/login/login';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  lgPage:any = LoginPage;
   rootPage:any = LoginPage;//HomePage;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {

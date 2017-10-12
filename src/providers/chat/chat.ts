@@ -1,7 +1,7 @@
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { ImageProvider } from './../image/image';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
-
 /*
   Generated class for the ChatProvider provider.
 
@@ -11,21 +11,36 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class ChatProvider {
 
-  constructor(public afDB: AngularFireDatabase) {
+  constructor(public afDB: AngularFireDatabase, public imgProvider: ImageProvider) {
     console.log('Hello ChatProvider Provider');
   }
 
-  getChatDetail(uIdA, uIdB){
-    return this.afDB.list("/chats/"+uIdA+"/detail/"+uIdB);
+  getChatDetail(uIdA, uIdB) {
+    return this.afDB.list("/chats/" + uIdA + "/detail/" + uIdB);
   }
-  
-  pushChatDetail(uIdA, uIdB, msg, emailA, emailB){
-    this.afDB.object("/chats/"+uIdB+"/infoChats/"+uIdA).set({emailSender:emailA, lastMSG:msg});
-    this.afDB.object("/chats/"+uIdA+"/infoChats/"+uIdB).set({emailSender:emailB, lastMSG:msg});
-    this.afDB.list("/chats/"+uIdB+"/detail/"+uIdA).push({msg:msg,tp:'m',sender:uIdA});
-    return this.afDB.list("/chats/"+uIdA+"/detail/"+uIdB).push({msg:msg,tp:'m',sender:uIdA});
+
+    getChats(uIdA) {
+    return this.afDB.list("/chats/" + uIdA + "/infoChats/");
   }
-  getChats(uIdA){
-    return this.afDB.list("/chats/"+uIdA+"/infoChats/");
+
+  pushChatDetail(uIdA, uIdB, msg, emailA, emailB, img) {
+    if (img == '') {
+      var data = { msg: msg, tp: 'm', sender: uIdA };
+      this.afDB.object("/chats/" + uIdB + "/infoChats/" + uIdA).set({ emailSender: emailA, lastMSG: msg });
+      this.afDB.object("/chats/" + uIdA + "/infoChats/" + uIdB).set({ emailSender: emailB, lastMSG: msg });
+      this.afDB.list("/chats/" + uIdB + "/detail/" + uIdA).push(data);
+      return this.afDB.list("/chats/" + uIdA + "/detail/" + uIdB).push(data);
+    } else {
+      return this.imgProvider.uploadImage(img).then(data => {
+        console.log(data);
+        if (data.state == 'success'){
+          var dataP = { msg: msg, tp: 'i', sender: uIdA, img:data.downloadURL }
+          this.afDB.object("/chats/" + uIdB + "/infoChats/" + uIdA).set({ emailSender: emailA, lastMSG: msg });
+          this.afDB.object("/chats/" + uIdA + "/infoChats/" + uIdB).set({ emailSender: emailB, lastMSG: msg });
+          this.afDB.list("/chats/" + uIdB + "/detail/" + uIdA).push(dataP);
+          return this.afDB.list("/chats/" + uIdA + "/detail/" + uIdB).push(dataP);
+        }
+      });
+    }
   }
 }

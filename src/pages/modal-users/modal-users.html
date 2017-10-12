@@ -12,7 +12,7 @@
 
 <ion-content>
   <ion-list  no-lines>
-    <ion-item *ngFor="let item of Users|async" class="item-no-margin" >
+    <ion-item *ngFor="let item of Users|async" class="item-no-margin" [hidden]="item.$key==uIdA">
       <button ion-button full outline color="light" (click)="dismiss(item.$key, item.name)" no-padding no-margin>
         <p color="black" text-left style="width: 95% !important;">{{item.name}}</p>
       </button>

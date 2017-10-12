@@ -1,47 +1,18 @@
-import { LoginPage } from './../../pages/login/login';
-import { HomePage } from './../../pages/home/home';
-import { AngularFireDatabase } from 'angularfire2/database';
-import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Injectable } from '@angular/core'; 
 import { Observable } from 'rxjs/Observable';
+import { AngularFireDatabase } from 'angularfire2/database';
+import { ToastController } from 'ionic-angular'; 
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
-/*
-  Generated class for the LoginProvider provider.
-
-  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
-  for more info on providers and Angular DI.
-*/
 @Injectable()
 export class LoginProvider {
   user: Observable<firebase.User>;
 
-  constructor(public afAuth: AngularFireAuth, public afDB: AngularFireDatabase) {
+  constructor(public afAuth: AngularFireAuth, public toastCtrl: ToastController, public afDB: AngularFireDatabase) {
     this.user = afAuth.authState;
-    console.log('Hello LoginProvider Provider');
   }
-  /*
-    login() { 
-      console.log(this.user);
-      console.log('teste'); 
-  
-      this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-  
-    }*/
-  getLogado() {
-    this.user.subscribe(user => {
-      if (!user) {
-        //this.navCtrl.setRoot(LoginPage);
-        //this.navCtrl.popToRoot();
-        console.log(null);
-        return;
-      }
-      //this.navCtrl.setRoot(HomePage);
-      console.log(user.displayName);
-    });
-    console.log(this.user)
-  }
+
   signIn(email, senha) {
     this.afAuth.auth.signInWithEmailAndPassword(email, senha)
       .then(res => {
@@ -51,7 +22,17 @@ export class LoginProvider {
           .then(res => console.log(res))
           .catch(err => console.log(err));
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        let toast = this.toastCtrl.create({
+          message: 'Ocorreu um erro ao realizar Login.' + '' + err.message,
+          duration: 5200,
+          position: 'bottom',
+          showCloseButton: true,
+          closeButtonText: 'OK'
+        });
+        toast.present();
+        console.log(err)
+      });
   }
 
   signUp(email, senha) {
@@ -63,7 +44,17 @@ export class LoginProvider {
           .then(res => console.log(res))
           .catch(err => console.log(err));
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        let toast = this.toastCtrl.create({
+          message: 'Ocorreu um erro ao realizar Cadastro.' + '' + err.message,
+          duration: 5200,
+          position: 'bottom',
+          showCloseButton: true,
+          closeButtonText: 'OK'
+        });
+        toast.present();
+        console.log(err)
+      });
   }
 
   signOut() {
